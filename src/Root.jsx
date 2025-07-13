@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
-import { Outlet, Link } from "react-router-dom";
-import isTokenExpired from "./isTokenExpired.js";
+import { Outlet } from "react-router-dom";
+import isTokenExpired from "./scripts/isTokenExpired.js";
 
 function Root() {
   const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user?.token) {
       if (isTokenExpired(user.token)) {
         localStorage.removeItem("user");
-        return;
+      } else {
+        setUser(user);
       }
-      setUser(user);
     }
+    setLoadingUser(false);
   }, []);
-  console.log(user);
   return (
     <>
-      <Outlet context={{ user, setUser }}></Outlet>
+      <Outlet context={{ user, setUser, loadingUser, setLoadingUser }}></Outlet>
     </>
   );
 }

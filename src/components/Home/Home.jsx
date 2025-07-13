@@ -1,12 +1,45 @@
-import { useOutletContext, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Header from "../Header/Header.jsx";
+import getAllPosts from "../../scripts/getAllPosts.js";
+import { Link } from "react-router-dom";
 
 function Home() {
-  const { user } = useOutletContext();
+  const [loadingPosts, setLoadingPosts] = useState(true);
+  const [allPosts, setAllPosts] = useState([]);
+
+  useEffect(() => {
+    async function fetchAllPosts() {
+      const newPosts = await getAllPosts();
+      setAllPosts(newPosts);
+      setLoadingPosts(false);
+    }
+    fetchAllPosts();
+  }, []);
+
   return (
-    <main>
-      {user ? <p>{user.username}</p> : <p>Loading or not logged in...</p>}
-      <Link to="/log-in">Go to Log in Page</Link>
-    </main>
+    <>
+      <Header />
+      {loadingPosts ? (
+        <main>Loading ...</main>
+      ) : (
+        <main>
+          {allPosts.map((post) => {
+            if (post.isPublished) {
+              return (
+                <div className="post" key={post.id}>
+                  <h2>
+                    <Link to={`/posts/${post.id}`}>{post.title}</Link>
+                  </h2>
+                  <h3>{post.User.username}</h3>
+                  <p>{post.text}</p>
+                  <p>{post.created}</p>
+                </div>
+              );
+            }
+          })}
+        </main>
+      )}
+    </>
   );
 }
 
