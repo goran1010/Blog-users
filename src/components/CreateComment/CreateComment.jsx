@@ -11,6 +11,7 @@ export default function CreateComment({ postId, commentCreated }) {
   async function handleSubmit(e) {
     e.preventDefault();
     await fetch(`http://localhost:3000/api/posts/${postId}/comments`, {
+      mode: "cors",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
