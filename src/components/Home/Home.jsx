@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../Header/Header.jsx";
 import getAllPosts from "../../scripts/getAllPosts.js";
 import { Link } from "react-router-dom";
+import formatDateTime from "../../scripts/formatDateTime.js";
 
 function Home() {
   const [loadingPosts, setLoadingPosts] = useState(true);
@@ -32,7 +33,7 @@ function Home() {
                   </h2>
                   <h3>{post.User.username}</h3>
                   <p>{post.text}</p>
-                  <p>{post.created}</p>
+                  <p>{formatDateTime(post.created)}</p>
                 </div>
               );
             }

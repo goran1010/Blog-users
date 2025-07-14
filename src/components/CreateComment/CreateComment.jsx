@@ -19,6 +19,7 @@ export default function CreateComment({ postId, commentCreated }) {
       body: JSON.stringify({ text }),
     });
     commentCreated();
+    setText("");
   }
 
   return (
