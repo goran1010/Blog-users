@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
-export default function CreateComment({ postId }) {
+export default function CreateComment({ postId, commentCreated }) {
+  const { user } = useOutletContext();
   const [text, setText] = useState("");
   function handleText(e) {
     setText(e.target.value);
@@ -8,11 +10,15 @@ export default function CreateComment({ postId }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await fetch(
-      `http://localhost:3000/api/posts/${postId}`,
-      { mode: "POST" },
-      { headers: { "Content-Type": "application/json" } }
-    );
+    await fetch(`http://localhost:3000/api/posts/${postId}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({ text }),
+    });
+    commentCreated();
   }
 
   return (
@@ -20,13 +26,12 @@ export default function CreateComment({ postId }) {
       <legend>Create a new comment:</legend>
       <div className="text">
         <label htmlFor="text">Write text:</label>
-        <input
-          type="text"
+        <textarea
           name="text"
           id="text"
           value={text}
           onChange={handleText}
-        />
+        ></textarea>
         <button type="submit">Post comment</button>
       </div>
     </form>

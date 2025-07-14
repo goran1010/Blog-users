@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useOutletContext } from "react-router-dom";
 import getPost from "../../scripts/getPost.js";
 import Comments from "../Comments/Comments.jsx";
@@ -9,15 +9,16 @@ function Post() {
   const { postId } = useParams();
   const [loading, setLoading] = useState(true);
   const [post, setPost] = useState(null);
-  useEffect(() => {
-    async function fetchPost() {
-      const newPost = await getPost(postId);
-      setPost(newPost);
-      setLoading(false);
-      console.log(newPost);
-    }
-    fetchPost();
+
+  const fetchPost = useCallback(async () => {
+    const newPost = await getPost(postId);
+    setPost(newPost);
+    setLoading(false);
   }, [postId]);
+
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
   if (loading) {
     return <main>Loading...</main>;
@@ -36,7 +37,7 @@ function Post() {
         )}
       </div>
       {user ? (
-        <CreateComment postId={postId} />
+        <CreateComment postId={postId} commentCreated={fetchPost} />
       ) : (
         <p>You need to be Logged in to comment!</p>
       )}
