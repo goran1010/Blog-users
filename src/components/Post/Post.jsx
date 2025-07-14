@@ -3,6 +3,7 @@ import { useParams, Link, useOutletContext } from "react-router-dom";
 import getPost from "../../scripts/getPost.js";
 import Comments from "../Comments/Comments.jsx";
 import CreateComment from "../CreateComment/CreateComment.jsx";
+import Spinner from "../Spinner/Spinner.jsx";
 
 function Post() {
   const { user } = useOutletContext();
@@ -21,7 +22,11 @@ function Post() {
   }, [fetchPost]);
 
   if (loading) {
-    return <main>Loading...</main>;
+    return (
+      <main>
+        <Spinner />
+      </main>
+    );
   }
   return (
     <main>

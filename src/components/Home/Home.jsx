@@ -3,25 +3,34 @@ import Header from "../Header/Header.jsx";
 import getAllPosts from "../../scripts/getAllPosts.js";
 import { Link } from "react-router-dom";
 import formatDateTime from "../../scripts/formatDateTime.js";
+import Spinner from "../Spinner/Spinner.jsx";
 
 function Home() {
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [allPosts, setAllPosts] = useState([]);
 
   useEffect(() => {
-    async function fetchAllPosts() {
-      const newPosts = await getAllPosts();
-      setAllPosts(newPosts);
+    try {
+      async function fetchAllPosts() {
+        const newPosts = await getAllPosts();
+        setAllPosts(newPosts);
+      }
+      fetchAllPosts();
+    } catch (err) {
+      //eslint-disable-next-line no-console
+      console.error(err);
+    } finally {
       setLoadingPosts(false);
     }
-    fetchAllPosts();
   }, []);
 
   return (
     <>
       <Header />
       {loadingPosts ? (
-        <main>Loading ...</main>
+        <main>
+          <Spinner />
+        </main>
       ) : (
         <main>
           {allPosts.map((post) => {
