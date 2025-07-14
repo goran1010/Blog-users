@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import isTokenExpired from "./scripts/isTokenExpired.js";
+import PageTitle from "./components/PageTitle/PageTitle.jsx";
 
 function Root() {
   const [user, setUser] = useState(null);
@@ -19,6 +20,7 @@ function Root() {
   }, []);
   return (
     <>
+      <PageTitle />
       <Outlet context={{ user, setUser, loadingUser, setLoadingUser }}></Outlet>
     </>
   );
