@@ -41,7 +41,7 @@ function Home() {
                     <Link to={`/posts/${post.id}`}>{post.title}</Link>
                   </h2>
                   <h3>{post.User.username}</h3>
-                  <p>{post.text}</p>
+                  <div dangerouslySetInnerHTML={{ __html: post.text }} />
                   <p>{formatDateTime(post.created)}</p>
                 </div>
               );

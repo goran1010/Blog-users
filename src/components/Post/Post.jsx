@@ -33,7 +33,7 @@ function Post() {
       <div className="post">
         <h1>{post.title}</h1>
         <p>{post.User.username}</p>
-        <p>{post.text}</p>
+        <div dangerouslySetInnerHTML={{ __html: post.text }} />
         <p>{post.created}</p>
         {post.comments.length > 0 ? (
           <Comments comments={post.comments} />
