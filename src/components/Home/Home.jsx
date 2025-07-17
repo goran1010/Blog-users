@@ -67,12 +67,6 @@ function Home() {
                     <span className={styles.span}>{post.comments.length}</span>
                   </p>
 
-                  {post.isPublished ? (
-                    <p className={styles.isPublishedTrue}>Post is LIVE</p>
-                  ) : (
-                    <p className={styles.isPublishedFalse}>Post is NOT Live</p>
-                  )}
-
                   <Link to={`/posts/${post.id}`} className={styles.link}>
                     View Post
                   </Link>
