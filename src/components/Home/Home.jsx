@@ -4,17 +4,18 @@ import getAllPosts from "../../scripts/getAllPosts.js";
 import { Link } from "react-router-dom";
 import formatDateTime from "../../scripts/formatDateTime.js";
 import Spinner from "../Spinner/Spinner.jsx";
+import styles from "./Home.module.css";
 
 function Home() {
   const [loadingPosts, setLoadingPosts] = useState(true);
   const [allPosts, setAllPosts] = useState([]);
 
+  async function fetchAllPosts() {
+    const newPosts = await getAllPosts();
+    setAllPosts(newPosts);
+  }
   useEffect(() => {
     try {
-      async function fetchAllPosts() {
-        const newPosts = await getAllPosts();
-        setAllPosts(newPosts);
-      }
       fetchAllPosts();
     } catch (err) {
       //eslint-disable-next-line no-console
@@ -24,31 +25,62 @@ function Home() {
     }
   }, []);
 
+  if (loadingPosts) {
+    return (
+      <main>
+        <Spinner />
+      </main>
+    );
+  }
+
   return (
     <>
       <Header />
-      {loadingPosts ? (
-        <main>
-          <Spinner />
-        </main>
-      ) : (
-        <main>
-          {allPosts.map((post) => {
-            if (post.isPublished) {
+
+      <main>
+        <div className={styles.posts}>
+          <hr className={styles.hr} />
+          {allPosts
+            .filter((post) => post.isPublished)
+            .map((post) => {
               return (
-                <div className="post" key={post.id}>
-                  <h2>
-                    <Link to={`/posts/${post.id}`}>{post.title}</Link>
-                  </h2>
-                  <h3>{post.User.username}</h3>
-                  <div dangerouslySetInnerHTML={{ __html: post.text }} />
-                  <p>{formatDateTime(post.created)}</p>
+                <div className={styles.post} key={post.id}>
+                  <h2 className={styles.title}>{post.title}</h2>
+                  <p className={styles.author}>
+                    Posted by:{" "}
+                    <span className={styles.span}>{post.User.username}</span>
+                  </p>
+                  <hr className={styles.hrThin} />
+                  <div
+                    className={styles.text}
+                    dangerouslySetInnerHTML={{ __html: post.text }}
+                  />
+                  <hr className={styles.hrThin} />
+                  <p className={styles.date}>
+                    Posted on:{" "}
+                    <span className={styles.span}>
+                      {formatDateTime(post.created)}
+                    </span>
+                  </p>
+                  <p className={styles.comments}>
+                    Number of comments:{" "}
+                    <span className={styles.span}>{post.comments.length}</span>
+                  </p>
+
+                  {post.isPublished ? (
+                    <p className={styles.isPublishedTrue}>Post is LIVE</p>
+                  ) : (
+                    <p className={styles.isPublishedFalse}>Post is NOT Live</p>
+                  )}
+
+                  <Link to={`/posts/${post.id}`} className={styles.link}>
+                    View Post
+                  </Link>
                 </div>
               );
-            }
-          })}
-        </main>
-      )}
+            })}
+        </div>
+      </main>
     </>
   );
 }
