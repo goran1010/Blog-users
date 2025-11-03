@@ -6,10 +6,10 @@ This is repo for the Blog Users front end for the Blog App, built with React.
 
 ```bash
 # Clone the repository
-git clone https://github.com/goran1010/template-vite-react-js.git
+git clone git@github.com:goran1010/Blog-users.git
 
 # Navigate to project directory
-cd template-vite-react-js
+cd Blog-users
 
 # Install dependencies
 npm install
